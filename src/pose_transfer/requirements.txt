@@ -1,0 +1,20 @@
+diffusers
+#densepose
+#detectron2
+huggingface-hub
+ipython
+numpy
+Pillow
+torch
+tqdm
+opencv-python
+fvcore  # added related to densepose predictor 
+torchvision # added for same
+pycocotools # added
+cloudpickle # added
+omegaconf   # added
+av   # added
+scipy  # added
+gradio
+fastapi
+uvicorn
