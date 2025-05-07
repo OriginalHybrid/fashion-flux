@@ -18,7 +18,7 @@ import sys
 # Imports for video generation
 # Add framepack to sys.path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), 'video_generation', 'framepack')))
-#from video_generation.framepack import framepack as fp
+from video_generation.framepack import framepack as fp
 
 ########################################
 
@@ -243,7 +243,7 @@ def app_gradio():
                      outputs=result_pose,
                  )
 
-            """
+            
             # --- Reel Generation Tab ---
             with gr.Tab("Reel Generation"):
                 #fp.initialize_framepack()
@@ -295,7 +295,7 @@ def app_gradio():
                 ips = [input_image, prompt, n_prompt, seed, total_second_length, latent_window_size, steps, cfg, gs, rs, gpu_memory_preservation, use_teacache, mp4_crf]
                 start_button.click(fn=fp.process, inputs=ips, outputs=[result_video, preview_image, progress_desc, progress_bar, start_button, end_button])
                 end_button.click(fn=fp.end_process)
-                """
+                
 
     demo.queue().launch(share=True, show_error=True)
 
