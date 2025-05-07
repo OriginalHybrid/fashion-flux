@@ -8,10 +8,10 @@ from IPython.display import display
 import gradio as gr
 
 # imported modules from the .py files. 
-from transform import LeffaTransform        
-from model import LeffaModel
-from inference import LeffaInference
-from densepose_predictor import DensePosePredictor  
+from pose_transfer.transform import LeffaTransform        
+from pose_transfer.model import LeffaModel
+from pose_transfer.inference import LeffaInference
+from pose_transfer.densepose_predictor import DensePosePredictor  
 #from leffa_utils.densepose_predictor import DensePosePredictor
 
 

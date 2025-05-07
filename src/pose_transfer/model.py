@@ -5,8 +5,8 @@ import torch.nn.functional as F
 from diffusers import AutoencoderKL, DDPMScheduler
 
 # these 2 imports are still from leffa.diffusion_model. 
-from leffa.diffusion_model.unet_ref import UNet2DConditionModel as ReferenceUNet
-from leffa.diffusion_model.unet_gen import UNet2DConditionModel as GenerativeUNet
+from pose_transfer.leffa.diffusion_model.unet_ref import UNet2DConditionModel as ReferenceUNet
+from pose_transfer.leffa.diffusion_model.unet_gen import UNet2DConditionModel as GenerativeUNet
 
 logger: logging.Logger = logging.getLogger(__name__)
 

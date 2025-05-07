@@ -2,7 +2,7 @@ from typing import Any, Dict
 import numpy as np
 import torch
 import torch.nn as nn
-from pipeline import LeffaPipeline
+from pose_transfer.pipeline import LeffaPipeline
 
 class LeffaInference:
     def __init__(self, model: nn.Module) -> None:
