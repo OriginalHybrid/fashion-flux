@@ -112,17 +112,16 @@ def app_gradio():
             # --- Style Transfer Tab ---
             with gr.Tab("Style Transfer"):
                 with gr.Row():
-                    with gr.Column(scale=1, min_width=350):
+                    root_path = "style_transfer/resource/demo/example"
+
+                    with gr.Column(scale=1, min_width=250):
                         image_path = gr.Image(type="filepath", interactive=True, visible=False)
-                        person_image = gr.Image(interactive=True, label="Person Image", type="filepath")
-                        with gr.Row():
-                            cloth_image = gr.Image(interactive=True, label="Condition Image", type="filepath")
-                            cloth_type = gr.Radio(
-                                label="Try-On Cloth Type",
-                                choices=["upper", "lower", "overall"],
-                                value="upper",
-                            )
-                        submit_style = gr.Button("Submit Style Transfer")
+                        person_image = gr.Image(interactive=True, label="Person Image", type="filepath", height=300, width=220)
+                        cloth_type = gr.Radio(
+                            label="Try-On Cloth Type",
+                            choices=["upper", "lower", "overall"],
+                            value="upper",
+                        )
 
                         with gr.Accordion("Advanced Options", open=False):
                             num_inference_steps = gr.Slider(
@@ -134,16 +133,16 @@ def app_gradio():
                             seed = gr.Slider(
                                 label="Seed", minimum=-1, maximum=10000, step=1, value=42
                             )
+                    with gr.Column(scale=1, min_width=250):
+                        cloth_image = gr.Image(interactive=True, label="Condition Image", type="filepath", height=300, width=220)
+                        submit_style = gr.Button("Submit Style Transfer")
 
-                    with gr.Column(scale=2, min_width=500):
-                        with gr.Tabs():
-                            with gr.Tab("Masked Image"):
-                                mask_image = gr.Image(interactive=False, label="Masked Image")
-                            with gr.Tab("Result Image"):
-                                result_image = gr.Image(interactive=False, label="Result")
+                    with gr.Column(scale=3, min_width=600):
+                        with gr.Row():
+                            mask_image = gr.Image(interactive=False, label="Masked Image")
+                            result_image = gr.Image(interactive=False, label="Result Image")
 
                         with gr.Row():
-                            root_path = "style_transfer/resource/demo/example"
                             with gr.Column():
                                 gr.Examples(
                                     examples=[os.path.join(root_path, "person", "men", f) for f in os.listdir(os.path.join(root_path, "person", "men"))],
@@ -160,6 +159,7 @@ def app_gradio():
                                 gr.Markdown(
                                     '<span style="color: #808080; font-size: small;">*Person examples from <a href="https://huggingface.co/spaces/levihsu/OOTDiffusion">OOTDiffusion</a> and <a href="https://www.outfitanyone.org">OutfitAnyone</a>.</span>'
                                 )
+
                             with gr.Column():
                                 gr.Examples(
                                     examples=[os.path.join(root_path, "condition", "upper", f) for f in os.listdir(os.path.join(root_path, "condition", "upper"))],
@@ -198,20 +198,45 @@ def app_gradio():
             # --- Pose Transfer Tab ---
             with gr.Tab("Pose Transfer"):
                 with gr.Row():
-                    with gr.Column():
-                        person_img = gr.Image(interactive=True, label="Person Image", type="filepath")
-                        pose_img = gr.Image(interactive=True, label="Pose Image", type="filepath")
-                        submit_pose = gr.Button("Submit Pose Transfer")
+                    pose_root_path = "pose_transfer/test_input_images"
+
+                    with gr.Column(scale=1, min_width=400):
+                        pose_image_path = gr.Image(type="filepath", interactive=True, visible=False)
+                        person_img = gr.Image(interactive=True, label="Person Image", type="filepath", height=600)
 
                         with gr.Accordion("Advanced Options", open=False):
-                            steps_pose = gr.Slider(label="Inference Step", minimum=10, maximum=100, step=5, value=50)
-                            scale_pose = gr.Slider(label="CFG Strength", minimum=0.0, maximum=50, step=0.5, value=2.5)
-                            seed_pose = gr.Slider(label="Seed", minimum=-1, maximum=10000, step=1, value=42)
+                            steps_pose = gr.Slider(
+                                label="Step pose", minimum=10, maximum=100, step=5, value=80
+                            )
+                            scale_pose = gr.Slider(
+                                label="CFG Strength", minimum=0.0, maximum=50, step=0.5, value=3.5
+                            )
+                            seed_pose = gr.Slider(
+                                label="Seed", minimum=-1, maximum=10000, step=1, value=42
+                            )
+                    with gr.Column(scale=1, min_width=400):
+                        pose_img = gr.Image(interactive=True, label="Pose Image", type="filepath", height=600)
+                        submit_pose = gr.Button("Submit Pose Transfer")
 
-                    with gr.Column():
-                        result_pose = gr.Image(interactive=False, label="Result")
+                    with gr.Column(scale=3, min_width=300):
+                        with gr.Row():
+                            result_pose = gr.Image(interactive=False, label="Result Image")
+                        with gr.Row():
+                            with gr.Column():
+                                gr.Examples(
+                                    examples=[os.path.join(pose_root_path, "Person", f) for f in os.listdir(os.path.join(pose_root_path, "Person"))],
+                                    examples_per_page=5,
+                                    inputs=person_img,
+                                    label="Person Examples"
+                                )
 
-                # Uncomment when you implement `pose_transfer_function`
+                            with gr.Column():
+                                gr.Examples(
+                                    examples=[os.path.join(pose_root_path, "Pose", f) for f in os.listdir(os.path.join(pose_root_path, "Pose"))],
+                                    examples_per_page=5,
+                                    inputs=pose_img,
+                                    label="Pose Examples"
+                                )
                 submit_pose.click(
                      fn=pose_transfer_function,
                      inputs=[person_img, pose_img, steps_pose, scale_pose, seed_pose],
