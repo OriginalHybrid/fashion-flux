@@ -150,15 +150,7 @@ def app_gradio():
                                     inputs=image_path,
                                     label="Person Examples ①"
                                 )
-                                gr.Examples(
-                                    examples=[os.path.join(root_path, "person", "women", f) for f in os.listdir(os.path.join(root_path, "person", "women"))],
-                                    examples_per_page=4,
-                                    inputs=image_path,
-                                    label="Person Examples ②"
-                                )
-                                gr.Markdown(
-                                    '<span style="color: #808080; font-size: small;">*Person examples from <a href="https://huggingface.co/spaces/levihsu/OOTDiffusion">OOTDiffusion</a> and <a href="https://www.outfitanyone.org">OutfitAnyone</a>.</span>'
-                                )
+                            
 
                             with gr.Column():
                                 gr.Examples(
