@@ -18,7 +18,7 @@ import sys
 # Imports for video generation
 # Add framepack to sys.path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), 'video_generation', 'framepack')))
-from video_generation.framepack import framepack as fp
+#from video_generation.framepack import framepack as fp
 
 ########################################
 
@@ -59,6 +59,44 @@ def submit_function(person_image, cloth_image, cloth_type, num_inference_steps, 
         return masked_img, result_img
     else:
         raise RuntimeError(f"API error {response.status_code}: {response.text}")
+
+
+
+# Function for pose transfer task
+def pose_transfer_function(person_image, pose_image, num_inference_steps, guidance_scale, seed):
+    url = config["pose_transfer_api"]
+
+    with open(person_image, "rb") as f1, open(pose_image, "rb") as f2:
+        files = {
+            "person_image": ("person.jpg", f1, "image/jpeg"),
+            "pose_image": ("pose.jpg", f2, "image/jpeg"),
+        }
+        data = {
+            "config_json": json.dumps({
+                #"cloth_type": cloth_type,
+                "num_inference_steps": num_inference_steps,
+                "guidance_scale": guidance_scale,
+                "seed": seed
+            })
+        }
+
+        response = requests.post(url, files=files, data=data)
+
+    if response.status_code == 200:
+        result = response.json()
+
+        #masked_image_bytes = base64.b64decode(result["masked_image"])
+        result_pose_bytes = base64.b64decode(result["result_pose"])
+
+        #masked_img = Image.open(io.BytesIO(masked_image_bytes))
+        result_pose = Image.open(io.BytesIO(result_pose_bytes))
+
+        #return masked_img, result_img
+        return result_pose
+    else:
+        raise RuntimeError(f"API error {response.status_code}: {response.text}")
+
+
 
 
 HEADER = """
@@ -156,12 +194,13 @@ def app_gradio():
                     outputs=[mask_image, result_image],
                 )
 
+
             # --- Pose Transfer Tab ---
             with gr.Tab("Pose Transfer"):
                 with gr.Row():
                     with gr.Column():
-                        person_pose_img = gr.Image(interactive=True, label="Person Image", type="filepath")
-                        pose_target_img = gr.Image(interactive=True, label="Pose Image", type="filepath")
+                        person_img = gr.Image(interactive=True, label="Person Image", type="filepath")
+                        pose_img = gr.Image(interactive=True, label="Pose Image", type="filepath")
                         submit_pose = gr.Button("Submit Pose Transfer")
 
                         with gr.Accordion("Advanced Options", open=False):
@@ -173,12 +212,13 @@ def app_gradio():
                         result_pose = gr.Image(interactive=False, label="Result")
 
                 # Uncomment when you implement `pose_transfer_function`
-                # submit_pose.click(
-                #     fn=pose_transfer_function,
-                #     inputs=[person_pose_img, pose_target_img, steps_pose, scale_pose, seed_pose],
-                #     outputs=result_pose,
-                # )
+                submit_pose.click(
+                     fn=pose_transfer_function,
+                     inputs=[person_img, pose_img, steps_pose, scale_pose, seed_pose],
+                     outputs=result_pose,
+                 )
 
+            """
             # --- Reel Generation Tab ---
             with gr.Tab("Reel Generation"):
                 #fp.initialize_framepack()
@@ -230,7 +270,7 @@ def app_gradio():
                 ips = [input_image, prompt, n_prompt, seed, total_second_length, latent_window_size, steps, cfg, gs, rs, gpu_memory_preservation, use_teacache, mp4_crf]
                 start_button.click(fn=fp.process, inputs=ips, outputs=[result_video, preview_image, progress_desc, progress_bar, start_button, end_button])
                 end_button.click(fn=fp.end_process)
-
+                """
 
     demo.queue().launch(share=True, show_error=True)
 
