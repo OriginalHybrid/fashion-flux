@@ -1,0 +1,4 @@
+{
+    "style_transfer_api" : "http://localhost:8000/style_transfer",
+    "fp_video_generation_api" : ""
+}

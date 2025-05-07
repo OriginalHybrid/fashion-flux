@@ -93,8 +93,6 @@ def submit_function(
     return masked_person, result_image
 
 
-def person_example_fn(image_path):
-    return image_path
 
 
     result = simple_vton_inference(
