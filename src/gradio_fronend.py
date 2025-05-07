@@ -100,7 +100,7 @@ def pose_transfer_function(person_image, pose_image, num_inference_steps, guidan
 
 
 HEADER = """
-<h1 style="text-align: center;"> Virtual-TryOn: Concatenation Is All You Need for Virtual Try-On with Diffusion Models </h1>
+<h1 style="text-align: center;"> Fashion Flux: Your personal AI Stylist.</h1>
 """
 
 def app_gradio():
@@ -114,9 +114,9 @@ def app_gradio():
                 with gr.Row():
                     root_path = "style_transfer/resource/demo/example"
 
-                    with gr.Column(scale=1, min_width=250):
+                    with gr.Column(scale=1, min_width=300):
                         image_path = gr.Image(type="filepath", interactive=True, visible=False)
-                        person_image = gr.Image(interactive=True, label="Person Image", type="filepath", height=300, width=220)
+                        person_image = gr.Image(interactive=True, label="Person Image", type="filepath", height=400, width=300)
                         cloth_type = gr.Radio(
                             label="Try-On Cloth Type",
                             choices=["upper", "lower", "overall"],
@@ -133,8 +133,8 @@ def app_gradio():
                             seed = gr.Slider(
                                 label="Seed", minimum=-1, maximum=10000, step=1, value=42
                             )
-                    with gr.Column(scale=1, min_width=250):
-                        cloth_image = gr.Image(interactive=True, label="Condition Image", type="filepath", height=300, width=220)
+                    with gr.Column(scale=1, min_width=300):
+                        cloth_image = gr.Image(interactive=True, label="Condition Image", type="filepath", height=400, width=300)
                         submit_style = gr.Button("Submit Style Transfer")
 
                     with gr.Column(scale=3, min_width=600):
@@ -201,7 +201,7 @@ def app_gradio():
                                 label="Step pose", minimum=10, maximum=100, step=5, value=80
                             )
                             scale_pose = gr.Slider(
-                                label="CFG Strength", minimum=0.0, maximum=50, step=0.5, value=3.5
+                                label="CFG Strength", minimum=0.0, maximum=50, step=0.5, value=2.2
                             )
                             seed_pose = gr.Slider(
                                 label="Seed", minimum=-1, maximum=10000, step=1, value=42

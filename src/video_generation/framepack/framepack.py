@@ -3,6 +3,7 @@ from .diffusers_helper.hf_login import login
 import os
 
 os.environ['HF_HOME'] = os.path.abspath(os.path.realpath(os.path.join(os.path.dirname(__file__), './hf_download')))
+os.environ["TOKENIZERS_PARALLELISM"] = "false"
 
 import torch
 import traceback
