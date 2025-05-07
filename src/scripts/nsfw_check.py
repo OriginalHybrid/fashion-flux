@@ -92,14 +92,14 @@ def is_nsfw(prompt: str) -> bool:
     prompt_lower = prompt.lower()
     return any(word in prompt_lower for word in nsfw_keywords)
 
-if __name__ == "__main__":
-    # Example usage
-    test_prompts = [
-        " ass "
-    ]
+# if __name__ == "__main__":
+#     # Example usage
+#     test_prompts = [
+#         " ass "
+#     ]
 
-    for prompt in test_prompts:
-        result = is_nsfw(prompt)
-        print(f"Prompt: {prompt}\nNSFW Detected: {result}\n")
+#     for prompt in test_prompts:
+#         result = is_nsfw(prompt)
+#         print(f"Prompt: {prompt}\nNSFW Detected: {result}\n")
 
 

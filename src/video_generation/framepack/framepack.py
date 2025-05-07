@@ -26,6 +26,7 @@ from .diffusers_helper.gradio.progress_bar import make_progress_bar_css, make_pr
 from transformers import SiglipImageProcessor, SiglipVisionModel
 from .diffusers_helper.clip_vision import hf_clip_vision_encode
 from .diffusers_helper.bucket_tools import find_nearest_bucket
+from scripts.nsfw_check import is_nsfw
 
 
 # parser = argparse.ArgumentParser()
@@ -343,6 +344,15 @@ def process(input_image, prompt, n_prompt, seed, total_second_length, latent_win
             yield output_filename, gr.update(visible=False), gr.update(), '', gr.update(interactive=True), gr.update(interactive=False)
             break
 
+def process_with_nsfw_check(input_image, prompt, n_prompt, seed, total_second_length, latent_window_size, steps, cfg, gs, rs, gpu_memory_preservation, use_teacache, mp4_crf):
+    if is_nsfw(prompt):  # Prompt is NSFW
+        error_message = "❌ NSFW content detected. Please use appropriate prompt language."
+        # Return placeholders and UI updates
+        yield None, None, error_message, '', gr.update(interactive=True), gr.update(interactive=False)
+        return
+
+    # If prompt is safe, call the original process function
+    yield from process(input_image, prompt, n_prompt, seed, total_second_length, latent_window_size, steps, cfg, gs, rs, gpu_memory_preservation, use_teacache, mp4_crf)
 
 def end_process():
     stream.input_queue.push('end')
