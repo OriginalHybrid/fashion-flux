@@ -1,12 +1,5 @@
 import os
 import gradio as gr
-# from inference import submit_function, person_example_fn
-# from app_flux import submit_function_flux
-# from app_pose import pose_transfer_function
-# from app_style_pose import style_and_pose_transfer_function
-
-# inference.py
-# from style_transfer.inference import person_example_fn
 import requests
 import json
 from PIL import Image
@@ -28,24 +21,39 @@ config = json.load(open("config.json"))
 def person_example_fn(image_path):
     return image_path
 
+def resize_image_to_buffer(image_path, size=(1024, 768), format="JPEG"):
+    """
+    Opens and resizes an image from a file path and returns an in-memory buffer.
+    """
+    img = Image.open(image_path).convert("RGB").resize(size)
+    buffer = io.BytesIO()
+    img.save(buffer, format=format)
+    buffer.seek(0)
+    return buffer
+
+
 def submit_function(person_image, cloth_image, cloth_type, num_inference_steps, guidance_scale, seed):
     url = config["style_transfer_api"]
 
-    with open(person_image, "rb") as f1, open(cloth_image, "rb") as f2:
-        files = {
-            "person_image": ("person.jpg", f1, "image/jpeg"),
-            "cloth_image": ("cloth.jpg", f2, "image/jpeg"),
-        }
-        data = {
-            "config_json": json.dumps({
-                "cloth_type": cloth_type,
-                "num_inference_steps": num_inference_steps,
-                "guidance_scale": guidance_scale,
-                "seed": seed
-            })
-        }
+    # Resize images and get in-memory buffers
+    person_buffer = resize_image_to_buffer(person_image)
+    cloth_buffer = resize_image_to_buffer(cloth_image)
 
-        response = requests.post(url, files=files, data=data)
+    files = {
+        "person_image": ("person.jpg", person_buffer, "image/jpeg"),
+        "cloth_image": ("cloth.jpg", cloth_buffer, "image/jpeg"),
+    }
+
+    data = {
+        "config_json": json.dumps({
+            "cloth_type": cloth_type,
+            "num_inference_steps": num_inference_steps,
+            "guidance_scale": guidance_scale,
+            "seed": seed
+        })
+    }
+    
+    response = requests.post(url, files=files, data=data)
 
     if response.status_code == 200:
         result = response.json()
@@ -59,7 +67,6 @@ def submit_function(person_image, cloth_image, cloth_type, num_inference_steps, 
         return masked_img, result_img
     else:
         raise RuntimeError(f"API error {response.status_code}: {response.text}")
-
 
 
 # Function for pose transfer task
