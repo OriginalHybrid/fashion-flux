@@ -6,8 +6,6 @@ Scripts used for manuscript: TBD
 ***
 
 ## Purpose of the study 
-### To do some science 
-
 
 ***
 
