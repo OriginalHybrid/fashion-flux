@@ -16,8 +16,3 @@ Target Audience:
     • Retail businesses seeking to integrate innovative technologies.
     • Consumers seeking a more personalized and engaging online shopping experience.
     • Social Media Influencers
-
-### Examples
-![App Demo 1](outputs/1.gif)
-![App Demo 2](outputs/2.gif)
-![App Demo 3](outputs/2.gif)
